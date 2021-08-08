@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @ApiFeature(since = ApiVersion.V1)
@@ -23,8 +25,38 @@ public class LocaleService {
 
 	private final ElytraApi api;
 
+	/**
+	 * 语言代码
+	 *
+	 * 例如："en"，"zh"
+	 */
+	private String suggestedLanguage = Locale.ENGLISH.getLanguage();
+
 	public LocaleService(ElytraApi api) {
 		this.api = api;
+	}
+
+	public void loadConfig() {
+		String lang = api.getConfig().getString("language");
+		if(lang != null) {
+			setSuggestedLanguage(new Locale(lang));
+		} else {
+			throw new IllegalStateException("Configuration error. Section 'language' is unavailable.");
+		}
+	}
+
+	@NotNull
+	public String getSuggestedLanguage() {
+		return suggestedLanguage;
+	}
+
+	public void setSuggestedLanguage(@NotNull Locale locale) {
+		if(!new Locale(suggestedLanguage).equals(locale)) {
+			final String newSuggested = locale.getLanguage();
+			Bukkit.getPluginManager().callEvent(new SuggestedLanguageChangedEvent(newSuggested, suggestedLanguage));
+
+			this.suggestedLanguage = newSuggested;
+		}
 	}
 
 	/**

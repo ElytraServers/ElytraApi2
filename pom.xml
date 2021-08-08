@@ -6,7 +6,7 @@
 
     <groupId>cn.elytra.code</groupId>
     <artifactId>api2</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-rc</version>
     <packaging>jar</packaging>
 
     <name>ElytraApi</name>
@@ -89,6 +89,7 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>16.0.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

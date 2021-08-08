@@ -66,10 +66,11 @@ public final class ElytraApi extends JavaPlugin {
 	}
 
 	protected void reloadLocale() {
-		String lang = getConfig().getString("language");
+		localeService.loadConfig();
 
 		try {
-			this.locale = localeService.loadLocaleYaml(this, "locale/"+lang+".yml");
+			this.locale = localeService.loadLocaleYaml(this,
+					"locale/"+localeService.getSuggestedLanguage()+".yml");
 		} catch (LocaleSetupException setup) {
 			if(LocaleSetupException.TYPE_FILE_MISSING == setup.getExceptionType()) {
 				getLogger().warning("Locale file is missing! Report this to the Issues in Github repo.");
