@@ -1,4 +1,8 @@
 # Elytra Api 2
+<image src="https://jitpack.io/v/ElytraServers/ElytraApi2.svg?style=flat-square"></image>
+<image src="https://img.shields.io/github/license/ElytraServers/ElytraApi2?label=License&style=flat-square"></image>
+<image src="https://img.shields.io/github/stars/ElytraServers/ElytraApi2?label=Stars&style=flat-square"></image>
+<image src="https://img.shields.io/badge/author-Taskeren-red?style=flat-square"></image>
 
 ## 介绍
 
@@ -27,7 +31,7 @@ repositories {
 
 ```groovy
 denpendencies {
-  implementation 'com.github.ElytraServers:ElytraApi2:<TAG>'
+  compileOnly 'com.github.ElytraServers:ElytraApi2:<TAG>'
 }
 ```
 
