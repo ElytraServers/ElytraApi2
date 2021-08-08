@@ -1,0 +1,7 @@
+name: ElytraApi
+version: @version@
+main: cn.elytra.code.api.ElytraApi
+api-version: 1.17
+commands:
+  elytra:
+    usage: "/elytra reload"

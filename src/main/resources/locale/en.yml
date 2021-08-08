@@ -1,0 +1,9 @@
+elytra:
+  api:
+    plugin:
+      enabled: "§aElytraApi §rEnabled."
+      disabled: "§aElytraApi §rDisabled."
+    loaded:
+      localeService: "LocaleService loaded."
+      localeForPlugin: "Localization loaded."
+      commandMessage: "§7ElytraApi has reloaded!"
