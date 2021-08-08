@@ -4,6 +4,9 @@
 <image src="https://img.shields.io/github/stars/ElytraServers/ElytraApi2?label=Stars&style=flat-square"></image>
 <image src="https://img.shields.io/badge/author-Taskeren-red?style=flat-square"></image>
 
+**使用 ElytraApi2 的项目**
+- [Creativee](https://github.com/ElytraServers/Creativee/)
+
 ## 介绍
 
 鞘翅接口2，是用于 Elytra 服务器插件系列开发的库。目前包含本地化支持方案（LocaleService）。
