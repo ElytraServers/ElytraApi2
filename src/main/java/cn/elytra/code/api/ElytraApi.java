@@ -2,7 +2,7 @@ package cn.elytra.code.api;
 
 import cn.elytra.code.api.locale.ILocale;
 import cn.elytra.code.api.locale.LocaleService;
-import cn.elytra.code.api.locale.LocaleSetupException;
+import cn.elytra.code.api.locale.PluginLocaleManager;
 import com.google.common.collect.Lists;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,6 +17,8 @@ public final class ElytraApi extends JavaPlugin {
 	public ILocale locale = ILocale.EMPTY_LOCALE;
 
 	public final LocaleService localeService = new LocaleService(this);
+
+	private final PluginLocaleManager localeMgr = new PluginLocaleManager(this, "en", "zh");
 
 	@Override
 	public void onEnable() {
@@ -67,16 +69,17 @@ public final class ElytraApi extends JavaPlugin {
 
 	protected void reloadLocale() {
 		localeService.loadConfig();
+		this.locale = localeMgr.loadLocaleYaml();
 
-		try {
-			this.locale = localeService.loadLocaleYaml(this,
-					"locale/"+localeService.getSuggestedLanguage()+".yml");
-		} catch (LocaleSetupException setup) {
-			if(LocaleSetupException.TYPE_FILE_MISSING == setup.getExceptionType()) {
-				getLogger().warning("Locale file is missing! Report this to the Issues in Github repo.");
-			}
-			throw setup;
-		}
+//		try {
+//			this.locale = localeService.loadLocaleYaml(this,
+//					"locale/"+localeService.getSuggestedLanguage()+".yml");
+//		} catch (LocaleSetupException setup) {
+//			if(LocaleSetupException.TYPE_FILE_MISSING == setup.getExceptionType()) {
+//				getLogger().warning("Locale file is missing! Report this to the Issues in Github repo.");
+//			}
+//			throw setup;
+//		}
 
 		getLogger().info(locale.format("elytra.api.loaded.localeForPlugin"));
 	}

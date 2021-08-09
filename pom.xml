@@ -6,7 +6,7 @@
 
     <groupId>cn.elytra.code</groupId>
     <artifactId>api2</artifactId>
-    <version>1.0-rc</version>
+    <version>1.0-rc3</version>
     <packaging>jar</packaging>
 
     <name>ElytraApi</name>

@@ -80,7 +80,17 @@ public class LocaleService {
 	public ILocale loadLocaleYaml(Plugin plugin, String path) {
 		final InputStream is = getFileInJar(plugin, path);
 		final YamlConfiguration yaml = YamlConfiguration.loadConfiguration(new InputStreamReader(is, Charsets.UTF_8));
-		return (key, args) -> yaml.contains(key) ? String.format(yaml.getString(key, "@ERROR@"), args) : key;
+		return new ILocale() {
+			@Override
+			public String format(String key, Object... args) {
+				return yaml.contains(key) ? String.format(yaml.getString(key, "@ERROR@"), args) : key;
+			}
+
+			@Override
+			public boolean has(String key) {
+				return yaml.contains(key);
+			}
+		};
 	}
 
 	public ILocale loadLocaleJson(Plugin plugin, String path) {
@@ -88,7 +98,17 @@ public class LocaleService {
 		final JsonElement json = new JsonParser().parse(new InputStreamReader(is, Charsets.UTF_8));
 		if (json.isJsonObject()) {
 			final JsonObject root = json.getAsJsonObject();
-			return (key, args) -> root.has(key) ? String.format(root.getAsJsonPrimitive(key).getAsString(), args) : key;
+			return new ILocale() {
+				@Override
+				public String format(String key, Object... args) {
+					return root.has(key) ? String.format(root.getAsJsonPrimitive(key).getAsString(), args) : key;
+				}
+
+				@Override
+				public boolean has(String key) {
+					return root.has(key);
+				}
+			};
 		} else {
 			throw new LocaleSetupException("Root in the Json file is not a Object.", LocaleSetupException.TYPE_JSON_ROOT_NOT_FIT);
 		}
@@ -109,7 +129,17 @@ public class LocaleService {
 			}
 		}
 
-		return (key, args) -> map.containsKey(key) ? String.format(map.get(key), args) : key;
+		return new ILocale() {
+			@Override
+			public String format(String key, Object... args) {
+				return map.containsKey(key) ? String.format(map.get(key), args) : key;
+			}
+
+			@Override
+			public boolean has(String key) {
+				return map.containsKey(key);
+			}
+		};
 	}
 
 }
