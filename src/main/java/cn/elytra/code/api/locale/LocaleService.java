@@ -52,10 +52,11 @@ public class LocaleService {
 
 	public void setSuggestedLanguage(@NotNull Locale locale) {
 		if(!new Locale(suggestedLanguage).equals(locale)) {
+			final String oldSuggested = suggestedLanguage;
 			final String newSuggested = locale.getLanguage();
-			Bukkit.getPluginManager().callEvent(new SuggestedLanguageChangedEvent(newSuggested, suggestedLanguage));
 
 			this.suggestedLanguage = newSuggested;
+			Bukkit.getPluginManager().callEvent(new SuggestedLanguageChangedEvent(newSuggested, oldSuggested));
 		}
 	}
 

@@ -4,13 +4,12 @@ import cn.elytra.code.api.ElytraApi;
 import cn.elytra.code.api.annotation.ApiFeature;
 import cn.elytra.code.api.annotation.ApiVersion;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -26,17 +25,18 @@ import java.util.function.Function;
 public class PluginLocaleManager {
 
 	private final Plugin plugin;
-	private final String[] localeAllowed;
+	private final String defaultLang;
+	private final String[] allowedLang;
 
 	private Function<LocaleSetupException, ILocale> exceptionHandler = (ex) -> {
 		ex.printStackTrace();
 		return null;
 	};
 
-	public PluginLocaleManager(@NotNull Plugin plugin, @NotNull String... localeAllowed) {
+	public PluginLocaleManager(@NotNull Plugin plugin, @NotNull String defaultLang, @Nullable String... allowedLang) {
 		this.plugin = plugin;
-		this.localeAllowed = localeAllowed;
-		Validate.notEmpty(localeAllowed);
+		this.defaultLang = defaultLang;
+		this.allowedLang = (String[]) ArrayUtils.add(allowedLang, defaultLang);
 	}
 
 	@NotNull
@@ -58,10 +58,10 @@ public class PluginLocaleManager {
 	@NotNull
 	public String getLanguageAvailable() {
 		String suggest = getLocaleService().getSuggestedLanguage();
-		if(ArrayUtils.contains(localeAllowed, suggest)) {
+		if(ArrayUtils.contains(allowedLang, suggest)) {
 			return suggest;
 		} else {
-			return localeAllowed[0];
+			return defaultLang;
 		}
 	}
 
