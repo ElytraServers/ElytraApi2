@@ -1,8 +1,6 @@
 package cn.elytra.code.api.locale;
 
 import cn.elytra.code.api.ElytraApi;
-import cn.elytra.code.api.annotation.ApiFeature;
-import cn.elytra.code.api.annotation.ApiVersion;
 import cn.elytra.code.api.utils.StreamReaders;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
@@ -20,15 +18,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@ApiFeature(since = ApiVersion.V1)
+/**
+ * Locale Service Provider
+ * <p>
+ * Can only construct {@link ILocale} but cannot manage them.
+ * Or you may need {@link PluginLocaleManager} or {@link cn.elytra.code.api.localeV1.PluginLocaleManagerV1}.
+ * <p>
+ * TODO: Make it Static
+ *
+ * @see PluginLocaleManager
+ * @see cn.elytra.code.api.localeV1.PluginLocaleManagerV1
+ */
 public class LocaleService {
 
 	private final ElytraApi api;
 
 	/**
-	 * 语言代码
-	 *
-	 * 例如："en"，"zh"
+	 * Language Code
+	 * <p>
+	 * eg: "en", "zh", "jp"
 	 */
 	private String suggestedLanguage = Locale.ENGLISH.getLanguage();
 
@@ -38,20 +46,30 @@ public class LocaleService {
 
 	public void loadConfig() {
 		String lang = api.getConfig().getString("language");
-		if(lang != null) {
+		if (lang != null) {
 			setSuggestedLanguage(new Locale(lang));
 		} else {
 			throw new IllegalStateException("Configuration error. Section 'language' is unavailable.");
 		}
 	}
 
+	/**
+	 * The suggested language code. Maybe not available in some plugin!
+	 *
+	 * @return the suggested language code
+	 */
 	@NotNull
 	public String getSuggestedLanguage() {
 		return suggestedLanguage;
 	}
 
+	/**
+	 * Set the suggested language code. Can be absent in some plugin.
+	 *
+	 * @param locale the suggested code
+	 */
 	public void setSuggestedLanguage(@NotNull Locale locale) {
-		if(!new Locale(suggestedLanguage).equals(locale)) {
+		if (!new Locale(suggestedLanguage).equals(locale)) {
 			final String oldSuggested = suggestedLanguage;
 			final String newSuggested = locale.getLanguage();
 
@@ -61,10 +79,10 @@ public class LocaleService {
 	}
 
 	/**
-	 * Return the InputStream of file, which is in the specified Plugin.
+	 * Return the InputStream of file existing in the specified Plugin JAR pack.
 	 *
-	 * @param plugin Specified Plugin
-	 * @param path   Path to the file
+	 * @param plugin specified plugin
+	 * @param path   path to the file
 	 * @return InputStream
 	 * @throws LocaleSetupException thrown when the file doesn't exists
 	 */

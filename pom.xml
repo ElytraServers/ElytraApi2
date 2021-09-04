@@ -6,7 +6,7 @@
 
     <groupId>cn.elytra.code</groupId>
     <artifactId>api2</artifactId>
-    <version>1.0-rc3-1</version>
+    <version>1.1-rc1</version>
     <packaging>jar</packaging>
 
     <name>ElytraApi</name>
@@ -54,6 +54,14 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>com.mojang:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
@@ -76,6 +84,11 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>minecraft-libraries</id>
+            <name>Minecraft Libraries</name>
+            <url>https://libraries.minecraft.net</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -90,6 +103,11 @@
             <artifactId>annotations</artifactId>
             <version>16.0.2</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>brigadier</artifactId>
+            <version>1.0.18</version>
         </dependency>
     </dependencies>
 </project>

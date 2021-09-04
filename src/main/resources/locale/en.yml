@@ -7,3 +7,18 @@ elytra:
       localeService: "LocaleService loaded."
       localeForPlugin: "Localization loaded."
       commandMessage: "§7ElytraApi has reloaded!"
+      playerSettingsDefaults: "PlayerSettings defaults loaded."
+      localeV1:
+        loadedCount: "Successfully loaded %d languages(%s)."
+      settingsService: "PlayerSettings loaded."
+    brigadier:
+      working: "Mojang Brigadier is currently running on this server."
+      testParseInt: "Parsing Result: %d"
+    command:
+      general:
+        playerOnly: "§cOnly can player use this command."
+      settings:
+        usage: "/settings <section> | <section> <set> <value>"
+        language:
+          using: "You're using %s"
+          setTo: "Your language has changed to %s"

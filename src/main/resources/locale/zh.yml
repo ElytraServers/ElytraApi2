@@ -7,3 +7,18 @@ elytra:
       localeService: "注册本地化服务（LocaleService）"
       localeForPlugin: "语言文件已加载"
       commandMessage: "§7鞘翅接口重载成功"
+      playerSettingsDefaults: "玩家设置默认值已加载"
+      localeV1:
+        loadedCount: "成功加载 %d 种语言（%s）"
+      settingsService: "玩家配置系统已加载"
+    brigadier:
+      working: "Mojang Brigadier 正在此服务器上运行"
+      testParseInt: "转换结果： %d"
+    command:
+      general:
+        playerOnly: "§c只有玩家可以执行此命令！"
+      settings:
+        usage: "/settings <配置项> | /settings <配置项> set <值>"
+        language:
+          using: "你正在使用 %s"
+          setTo: "成功将你的语言切换到 %s"

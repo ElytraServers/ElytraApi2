@@ -5,3 +5,7 @@ api-version: 1.17
 commands:
   elytra:
     usage: "/elytra reload"
+  brigadier:
+    usage: "/brigadier"
+  settings:
+    usage: "/settings"
