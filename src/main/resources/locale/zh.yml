@@ -1,8 +1,8 @@
 elytra:
   api:
     plugin:
-      enabled: "§aElytraApi §r已启用"
-      disabled: "§aElytraApi §r已禁用"
+      enabled: "§aElytraApi %s §r已启用"
+      disabled: "§aElytraApi %s §r已禁用"
     loaded:
       localeService: "注册本地化服务（LocaleService）"
       localeForPlugin: "语言文件已加载"

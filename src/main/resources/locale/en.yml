@@ -1,8 +1,8 @@
 elytra:
   api:
     plugin:
-      enabled: "§aElytraApi §rEnabled."
-      disabled: "§aElytraApi §rDisabled."
+      enabled: "§aElytraApi %s §rEnabled."
+      disabled: "§aElytraApi %s §rDisabled."
     loaded:
       localeService: "LocaleService loaded."
       localeForPlugin: "Localization loaded."

@@ -1,12 +1,10 @@
 package cn.elytra.code.api;
 
-import cn.elytra.code.api.command.BrigadierAbstractCommand;
 import cn.elytra.code.api.command.BrigadierTestCommand;
 import cn.elytra.code.api.command.PlayerSettingsCommand;
 import cn.elytra.code.api.locale.ILocale;
 import cn.elytra.code.api.locale.LocaleService;
 import cn.elytra.code.api.localeV1.PluginLocaleManagerV1;
-import cn.elytra.code.api.psettings.PlayerSettings;
 import cn.elytra.code.api.psettings.PlayerSettingsManager;
 import cn.elytra.code.api.utils.Loggers;
 import cn.elytra.code.api.utils.Senders;
@@ -15,10 +13,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +34,7 @@ public final class ElytraApi extends JavaPlugin {
 
 	public final LocaleService localeService = new LocaleService(this);
 
+	public final String version;
 	public final PluginLocaleManagerV1 localeManager;
 	public final PlayerSettingsManager settingsManager;
 
@@ -54,6 +52,8 @@ public final class ElytraApi extends JavaPlugin {
 
 	public ElytraApi() {
 		instance = this;
+
+		this.version = getDescription().getVersion();
 
 		this.localeManager = new PluginLocaleManagerV1(this, "en", "zh");
 		this.settingsManager = new PlayerSettingsManager(this);
@@ -77,7 +77,7 @@ public final class ElytraApi extends JavaPlugin {
 		loadSettingsDefaults();
 		Loggers.i18n("elytra.api.loaded.playerSettingsDefaults");
 
-		Loggers.i18n("elytra.api.plugin.enabled");
+		Loggers.i18n("elytra.api.plugin.enabled", version);
 
 		new BrigadierTestCommand().register(this);
 		new PlayerSettingsCommand().register(this);
@@ -85,7 +85,7 @@ public final class ElytraApi extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		getLogger().info(locale.format("elytra.api.plugin.disabled"));
+		Loggers.i18n("elytra.api.plugin.disabled", version);
 	}
 
 	@Override
@@ -111,12 +111,12 @@ public final class ElytraApi extends JavaPlugin {
 		return null;
 	}
 
-	protected void onReload() {
+	private void onReload() {
 		reloadConfig();
 		reloadLocale();
 	}
 
-	protected void reloadLocale() {
+	private void reloadLocale() {
 		localeService.loadConfig();
 		// this.locale = localeManager.loadLocaleYaml();
 
@@ -135,7 +135,7 @@ public final class ElytraApi extends JavaPlugin {
 	/**
 	 * Put default values for PlayerSettings.
 	 */
-	protected void loadSettingsDefaults() {
+	private void loadSettingsDefaults() {
 		final Configuration defaults = new YamlConfiguration();
 		defaults.set(PS_ELYTRA_API_LANGUAGE, "en");
 		settingsManager.addDefaults(defaults);

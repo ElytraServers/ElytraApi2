@@ -5,7 +5,10 @@ api-version: 1.17
 commands:
   elytra:
     usage: "/elytra reload"
+    permission: "op"
   brigadier:
     usage: "/brigadier"
+    permission: "true"
   settings:
     usage: "/settings"
+    permission: "true"

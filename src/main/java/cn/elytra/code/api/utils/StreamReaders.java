@@ -15,10 +15,15 @@ public class StreamReaders {
 	@Nullable
 	public static String readText(InputStream is) {
 		final Scanner sc = new Scanner(is, "UTF-8");
-		if(sc.hasNext()) {
-			return sc.next();
-		} else {
+		StringBuilder sb = new StringBuilder();
+		while(sc.hasNext()) {
+			sb.append(sc.next());
+		}
+		String str = sb.toString();
+		if(str.isEmpty()) {
 			return null;
+		} else {
+			return str;
 		}
 	}
 
