@@ -1,6 +1,7 @@
 package cn.elytra.code.api.psettings;
 
 import cn.elytra.code.api.ElytraApi;
+import cn.elytra.code.api.localeV1.event.PlayerChangeLanguageEvent;
 import cn.elytra.code.api.utils.Loggers;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -85,6 +86,8 @@ public abstract class PlayerSettings extends YamlConfiguration {
 
 	public void setLanguage(String lang) {
 		set(PS_ELYTRA_API_LANGUAGE, lang);
+		// Dispatch events - PlayerChangeLanguageEvent
+		Bukkit.getPluginManager().callEvent(new PlayerChangeLanguageEvent(lang));
 	}
 
 }

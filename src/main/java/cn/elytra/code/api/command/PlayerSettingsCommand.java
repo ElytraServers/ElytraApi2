@@ -1,5 +1,6 @@
 package cn.elytra.code.api.command;
 
+import cn.elytra.code.api.localeV1.PluginLocaleManagerV1;
 import cn.elytra.code.api.psettings.PlayerSettings;
 import cn.elytra.code.api.utils.Senders;
 import com.mojang.brigadier.arguments.StringArgumentType;
