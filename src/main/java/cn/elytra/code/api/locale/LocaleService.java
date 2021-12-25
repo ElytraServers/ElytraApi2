@@ -7,7 +7,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -20,14 +19,8 @@ import java.util.Map;
 
 /**
  * Locale Service Provider
- * <p>
- * Can only construct {@link ILocale} but cannot manage them.
- * Or you may need {@link PluginLocaleManager} or {@link cn.elytra.code.api.localeV1.PluginLocaleManagerV1}.
- * <p>
- * TODO: Make it Static
  *
- * @see PluginLocaleManager
- * @see cn.elytra.code.api.localeV1.PluginLocaleManagerV1
+ * @see cn.elytra.code.api.localeV2.ELocale
  */
 public class LocaleService {
 
@@ -70,11 +63,7 @@ public class LocaleService {
 	 */
 	public void setSuggestedLanguage(@NotNull Locale locale) {
 		if (!new Locale(suggestedLanguage).equals(locale)) {
-			final String oldSuggested = suggestedLanguage;
-			final String newSuggested = locale.getLanguage();
-
-			this.suggestedLanguage = newSuggested;
-			Bukkit.getPluginManager().callEvent(new SuggestedLanguageChangedEvent(newSuggested, oldSuggested));
+			this.suggestedLanguage = locale.getLanguage();
 		}
 	}
 
@@ -84,7 +73,7 @@ public class LocaleService {
 	 * @param plugin specified plugin
 	 * @param path   path to the file
 	 * @return InputStream
-	 * @throws LocaleSetupException thrown when the file doesn't exists
+	 * @throws LocaleSetupException thrown when the file doesn't exist
 	 */
 	@NotNull
 	protected InputStream getFileInJar(Plugin plugin, String path) throws LocaleSetupException {

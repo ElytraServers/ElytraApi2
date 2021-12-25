@@ -1,12 +1,10 @@
 package cn.elytra.code.api.localeV2;
 
 import cn.elytra.code.api.ElytraApi;
-import cn.elytra.code.api.locale.ILocale;
 import cn.elytra.code.api.locale.LocaleService;
 import cn.elytra.code.api.locale.LocaleSetupException;
 import cn.elytra.code.api.utils.MapHelper;
 import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -15,13 +13,11 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;

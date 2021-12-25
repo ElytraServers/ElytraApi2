@@ -2,11 +2,8 @@ package cn.elytra.code.api.locale;
 
 /**
  * Locale Interface.
- * <p>
- * Should be constructed in {@link LocaleService} or {@link PluginLocaleManager}.
  *
- * @see LocaleService
- * @see PluginLocaleManager
+ * @see cn.elytra.code.api.localeV2.ILocaleEntries
  */
 public interface ILocale {
 

@@ -49,10 +49,10 @@ public class FileHelper {
 		bw.write(str);
 	}
 
-	public static void move(File src, File dest) throws IOException {
-		Path pathSrc = src.toPath();
-		Path pathDest = dest.toPath();
-		Files.move(pathSrc, pathDest);
+	public static void move(File source, File destination) throws IOException {
+		Path pathSource = source.toPath();
+		Path pathDestination = destination.toPath();
+		Files.move(pathSource, pathDestination);
 	}
 
 	@NotNull

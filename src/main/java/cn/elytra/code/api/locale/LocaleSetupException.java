@@ -6,7 +6,7 @@ public class LocaleSetupException extends RuntimeException {
 	public static final int TYPE_FILE_MISSING = 1;
 	public static final int TYPE_JSON_ROOT_NOT_FIT = 2;
 
-	public int type;
+	public final int type;
 
 	public LocaleSetupException(String message) {
 		this(message, TYPE_UNDEFINED);
