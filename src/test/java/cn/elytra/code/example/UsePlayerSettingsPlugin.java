@@ -1,8 +1,7 @@
 package cn.elytra.code.example;
 
 import cn.elytra.code.api.ElytraApi;
-import cn.elytra.code.api.psettings.PlayerSettings;
-import cn.elytra.code.api.psettings.PlayerSettingsManager;
+import cn.elytra.code.api.personality.Personality;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,10 +31,10 @@ public class UsePlayerSettingsPlugin extends JavaPlugin {
 	}
 
 	public String getData(OfflinePlayer player) {
-		return PlayerSettings.get(player).getString(PS_THIRD_PARTY_PLUGIN_KEY);
+		return Personality.get(player).getString(PS_THIRD_PARTY_PLUGIN_KEY);
 	}
 
 	public void setData(OfflinePlayer player, String data) {
-		PlayerSettings.get(player).set(PS_THIRD_PARTY_PLUGIN_KEY, data);
+		Personality.get(player).set(PS_THIRD_PARTY_PLUGIN_KEY, data);
 	}
 }

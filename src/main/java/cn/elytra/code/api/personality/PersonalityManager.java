@@ -1,4 +1,4 @@
-package cn.elytra.code.api.psettings;
+package cn.elytra.code.api.personality;
 
 import cn.elytra.code.api.ElytraApi;
 import com.google.common.cache.CacheBuilder;
@@ -16,23 +16,21 @@ import java.util.concurrent.TimeUnit;
 /**
  * Player Settings Manager.
  */
-public class PlayerSettingsManager {
+public class PersonalityManager {
 
-	private final ElytraApi plugin;
 	private final File dataDirectory;
 
 	private final List<Configuration> defaults = Lists.newArrayList();
 
-	private final LoadingCache<UUID, PlayerSettings> caches;
+	private final LoadingCache<UUID, Personality> caches;
 
-	public PlayerSettingsManager(ElytraApi plugin) {
-		this.plugin = plugin;
+	public PersonalityManager(ElytraApi plugin) {
 		this.dataDirectory = new File(plugin.getDataFolder(), "/PlayerSettings");
 
-		CacheLoader<UUID, PlayerSettings> loader = new CacheLoader<UUID, PlayerSettings>() {
+		CacheLoader<UUID, Personality> loader = new CacheLoader<UUID, Personality>() {
 			@Override
-			public PlayerSettings load(UUID uuid) {
-				return loadSettings(uuid);
+			public Personality load(UUID uuid) {
+				return loadPersonality(uuid);
 			}
 		};
 
@@ -44,21 +42,21 @@ public class PlayerSettingsManager {
 	}
 
 	private File getSpecifiedFile(UUID uuid) {
-		return new File(dataDirectory, "PlayerSettings_"+uuid+".json");
+		return new File(dataDirectory, uuid+".pn.yml");
 	}
 
-	private PlayerSettings loadSettings(UUID uuid) {
-		final PlayerSettings ps = PlayerSettings.loadConfiguration(getSpecifiedFile(uuid));
+	private Personality loadPersonality(UUID uuid) {
+		final Personality ps = Personality.loadConfiguration(getSpecifiedFile(uuid));
 		defaults.forEach(ps::addDefaults);
 		return ps;
 	}
 
-	public PlayerSettings getSettings(UUID uuid) {
+	public Personality getOrCreate(UUID uuid) {
 		return caches.getUnchecked(uuid);
 	}
 
-	public PlayerSettings getPlayerSettings(OfflinePlayer player) {
-		return getSettings(player.getUniqueId());
+	public Personality getOrCreate(OfflinePlayer player) {
+		return getOrCreate(player.getUniqueId());
 	}
 
 	public void addDefaults(Configuration config) {

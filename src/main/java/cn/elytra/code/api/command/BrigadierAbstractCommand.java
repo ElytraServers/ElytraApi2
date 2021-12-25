@@ -1,6 +1,6 @@
 package cn.elytra.code.api.command;
 
-import cn.elytra.code.api.utils.Loggers;
+import cn.elytra.code.api.ElytraApi;
 import com.google.common.base.Joiner;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -47,16 +48,16 @@ public class BrigadierAbstractCommand implements CommandExecutor, TabCompleter {
 	 */
 	public void register(Plugin plugin) {
 		PluginCommand command = plugin.getServer().getPluginCommand(commandName);
-		if (command != null) {
+		if(command != null) {
 			command.setExecutor(this);
 			command.setTabCompleter(this);
 		} else {
-			Loggers.error("Unable to register null command {0}.", commandName);
+			ElytraApi.LOGGER.log(Level.WARNING, "Unable to register null command "+commandName);
 		}
 	}
 
 	private String getWholeString(String label, String[] args) {
-		if (args.length == 0) {
+		if(args.length == 0) {
 			return label;
 		} else {
 			return label + ' ' + Joiner.on(' ').join(args);
@@ -68,7 +69,7 @@ public class BrigadierAbstractCommand implements CommandExecutor, TabCompleter {
 		try {
 			dispatcher.execute(getWholeString(label, args), sender);
 			return true;
-		} catch (CommandSyntaxException e) {
+		} catch(CommandSyntaxException e) {
 			sender.sendMessage(ChatColor.RED + e.getMessage());
 			return true;
 		}

@@ -1,13 +1,12 @@
 package cn.elytra.code.api;
 
-import cn.elytra.code.api.command.BrigadierTestCommand;
 import cn.elytra.code.api.command.PlayerSettingsCommand;
 import cn.elytra.code.api.locale.ILocale;
 import cn.elytra.code.api.locale.LocaleService;
-import cn.elytra.code.api.localeV1.PluginLocaleManagerV1;
-import cn.elytra.code.api.psettings.PlayerSettingsManager;
-import cn.elytra.code.api.utils.Loggers;
-import cn.elytra.code.api.utils.Senders;
+import cn.elytra.code.api.localeV2.ELocale;
+import cn.elytra.code.api.localeV2.MergedLocaleEntries;
+import cn.elytra.code.api.personality.Personality;
+import cn.elytra.code.api.personality.PersonalityManager;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,28 +14,31 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Logger;
 
-import static cn.elytra.code.api.psettings.PlayerSettings.PS_ELYTRA_API_LANGUAGE;
+import static cn.elytra.code.api.personality.Personality.PS_ELYTRA_API_LANGUAGE;
 
 public final class ElytraApi extends JavaPlugin {
 
 	public static final Gson GSON = new Gson();
 	public static final Gson GSON_PRETTY = new GsonBuilder().setPrettyPrinting().create();
 
+	public static final Logger LOGGER = Logger.getLogger("ElytraApi");
+
 	public ILocale locale = ILocale.EMPTY_LOCALE;
 
 	public final LocaleService localeService = new LocaleService(this);
 
 	public final String version;
-	public final PluginLocaleManagerV1 localeManager;
-	public final PlayerSettingsManager settingsManager;
+	public final PersonalityManager settingsManager;
 
 	@Nullable
 	private static ElytraApi instance;
@@ -55,8 +57,9 @@ public final class ElytraApi extends JavaPlugin {
 
 		this.version = getDescription().getVersion();
 
-		this.localeManager = new PluginLocaleManagerV1(this, "en", "zh");
-		this.settingsManager = new PlayerSettingsManager(this);
+		ELocale.initPluginLocaleYaml(this, "en", "zh");
+
+		this.settingsManager = new PersonalityManager(this);
 	}
 
 	@Override
@@ -68,24 +71,23 @@ public final class ElytraApi extends JavaPlugin {
 		// Register Locale Service
 		getServer().getServicesManager().register(LocaleService.class, localeService,
 				this, ServicePriority.Normal);
-		Loggers.i18n("elytra.api.loaded.localeService");
+		getLogger().info(ELocale.translate("elytra.api.loaded.localeService"));
 
-		getServer().getServicesManager().register(PlayerSettingsManager.class, settingsManager,
+		getServer().getServicesManager().register(PersonalityManager.class, settingsManager,
 				this, ServicePriority.Normal);
-		Loggers.i18n("elytra.api.loaded.settingsService");
+		getLogger().info(ELocale.translate("elytra.api.loaded.settingsService"));
 
 		loadSettingsDefaults();
-		Loggers.i18n("elytra.api.loaded.playerSettingsDefaults");
+		getLogger().info(ELocale.translate("elytra.api.loaded.playerSettingsDefaults"));
 
-		Loggers.i18n("elytra.api.plugin.enabled", version);
+		getLogger().info(ELocale.translate("elytra.api.plugin.enabled", version));
 
-		new BrigadierTestCommand().register(this);
 		new PlayerSettingsCommand().register(this);
 	}
 
 	@Override
 	public void onDisable() {
-		Loggers.i18n("elytra.api.plugin.disabled", version);
+		getLogger().info(ELocale.translate("elytra.api.plugin.disabled", version));
 	}
 
 	@Override
@@ -95,7 +97,14 @@ public final class ElytraApi extends JavaPlugin {
 				String subcommand = args[0];
 				if(subcommand.equalsIgnoreCase("reload")) {
 					onReload();
-					Senders.sendMessage(sender, "elytra.api.loaded.commandMessage");
+					sender.sendMessage(ELocale.translate(Personality.getLanguage(sender), "elytra.api.loaded.commandMessage"));
+					return true;
+				} else if(subcommand.equalsIgnoreCase("translate") &&
+						args.length > 1) {
+					String translatingKey = args[1];
+					final Map<Locale, MergedLocaleEntries> translators = ELocale.getTranslators();
+					sender.sendMessage(String.format("%s translators registered.", translators.entrySet().size()));
+					translators.forEach((locale, translator) -> sender.sendMessage("["+locale.getLanguage()+"] "+translator.format(translatingKey)));
 					return true;
 				}
 			}
@@ -104,7 +113,7 @@ public final class ElytraApi extends JavaPlugin {
 	}
 
 	@Override
-	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, String alias, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
 		if(alias.equalsIgnoreCase("elytra")) {
 			return Lists.newArrayList("reload", "settings");
 		}
@@ -118,18 +127,8 @@ public final class ElytraApi extends JavaPlugin {
 
 	private void reloadLocale() {
 		localeService.loadConfig();
-		// this.locale = localeManager.loadLocaleYaml();
 
-		localeManager.unregisterAll();
-		localeManager.loadAndRegisterLocaleYaml("en");
-		localeManager.loadAndRegisterLocaleYaml("zh");
-
-		this.locale = localeManager.getLocaleOrDefault(localeService.getSuggestedLanguage());
-
-		Loggers.i18n("elytra.api.loaded.localeV1.loadedCount",
-				localeManager.getCacheSize(), localeManager.getAvailableLanguages());
-
-		getLogger().info(locale.format("elytra.api.loaded.localeForPlugin"));
+		getLogger().info(ELocale.translate("elytra.api.loaded.localeForPlugin"));
 	}
 
 	/**

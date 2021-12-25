@@ -1,11 +1,10 @@
-package cn.elytra.code.api.psettings;
+package cn.elytra.code.api.personality;
 
 import cn.elytra.code.api.ElytraApi;
-import cn.elytra.code.api.localeV1.event.PlayerChangeLanguageEvent;
-import cn.elytra.code.api.utils.Loggers;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 
 /**
@@ -21,12 +21,12 @@ import java.util.logging.Level;
  *
  * @since v1.1
  */
-public abstract class PlayerSettings extends YamlConfiguration {
+public abstract class Personality extends YamlConfiguration {
 
 	public static final String PS_ELYTRA_API_LANGUAGE = "elytra.api.language";
 
-	public static PlayerSettings get(OfflinePlayer player) {
-		return ElytraApi.instance().settingsManager.getPlayerSettings(player);
+	public static Personality get(OfflinePlayer player) {
+		return ElytraApi.instance().settingsManager.getOrCreate(player);
 	}
 
 	public abstract File getFilePath();
@@ -34,8 +34,8 @@ public abstract class PlayerSettings extends YamlConfiguration {
 	public void save() {
 		try {
 			save0();
-		} catch (IOException ex) {
-			Loggers.error("Unable to save PlayerSettings to '{0}'.", ex, this.getFilePath());
+		} catch(IOException ex) {
+			ElytraApi.LOGGER.log(Level.WARNING, "Unable to save PlayerSettings to " + this.getFilePath(), ex);
 		}
 	}
 
@@ -60,10 +60,10 @@ public abstract class PlayerSettings extends YamlConfiguration {
 	 * @return The instance
 	 */
 	@NotNull
-	public static PlayerSettings loadConfiguration(@NotNull File file) {
+	public static Personality loadConfiguration(@NotNull File file) {
 		Validate.notNull(file, "File cannot be null");
 
-		PlayerSettings config = new PlayerSettings() {
+		Personality config = new Personality() {
 			@Override
 			public File getFilePath() {
 				return file;
@@ -72,8 +72,8 @@ public abstract class PlayerSettings extends YamlConfiguration {
 
 		try {
 			config.load(file);
-		} catch (FileNotFoundException ignored) {
-		} catch (IOException | InvalidConfigurationException ex) {
+		} catch(FileNotFoundException ignored) {
+		} catch(IOException | InvalidConfigurationException ex) {
 			Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
 		}
 
@@ -87,7 +87,24 @@ public abstract class PlayerSettings extends YamlConfiguration {
 	public void setLanguage(String lang) {
 		set(PS_ELYTRA_API_LANGUAGE, lang);
 		// Dispatch events - PlayerChangeLanguageEvent
-		Bukkit.getPluginManager().callEvent(new PlayerChangeLanguageEvent(lang));
+		// Bukkit.getPluginManager().callEvent(new PlayerChangeLanguageEvent(lang));
+	}
+
+	// QUICK METHODS
+
+	/**
+	 * 仅用于 {@link cn.elytra.code.api.localeV2.ELocale#translate(Locale, String, Object...)}
+	 *
+	 * @param sender 玩家
+	 * @return 语言
+	 */
+	@Nullable
+	public static Locale getLanguage(CommandSender sender) {
+		if(sender instanceof OfflinePlayer) {
+			return Locale.forLanguageTag(Personality.get((OfflinePlayer) sender).getLanguage());
+		} else {
+			return null;
+		}
 	}
 
 }
